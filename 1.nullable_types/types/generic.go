@@ -3,40 +3,46 @@ package types
 import (
 	"encoding/json"
 	"net/http"
+
+	"golang.org/x/exp/constraints"
 )
 
-type NullableInt struct {
-	value *int
+type Number interface {
+	constraints.Float | constraints.Integer
 }
 
-func (t NullableInt) Value() int {
+type NullableNumber[T Number] struct {
+	value *T
+}
+
+func (t NullableNumber[T]) Value() T {
 	if t.value == nil {
-		return 0
+		return *new(T)
 	}
 	return *t.value
 }
 
-func (t *NullableInt) Set(v int) {
+func (t *NullableNumber[T]) Set(v T) {
 	t.value = &v
 }
 
-func (t NullableInt) IsNull() bool {
+func (t NullableNumber[T]) IsNull() bool {
 	return t.value == nil
 }
 
-func (t *NullableInt) UnmarshalJSON(data []byte) error {
+func (t *NullableNumber[T]) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &t.value)
 }
 
-func (t NullableInt) MarshalJSON() ([]byte, error) {
+func (t NullableNumber[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.value)
 }
 
-type PayloadWithCustomTypes struct {
-	Count NullableInt `json:"count"`
+type PayloadWithGenericNumberType struct {
+	Count NullableNumber[float64] `json:"count"`
 }
 
-func NewAppThatAcceptsCustomTypes() http.HandlerFunc {
+func NewAppThatAcceptsGenericNumberType() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		var payload PayloadWithCustomTypes
 		if err := json.NewDecoder(request.Body).Decode(&payload); err != nil {

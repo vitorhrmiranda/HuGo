@@ -17,6 +17,7 @@ func TestAcceptance(t *testing.T) {
 	t.Run("with basic type", func(t *testing.T) { Acceptance(t, types.NewAppThatAcceptsBasicTypes()) })
 	t.Run("with pointer type", func(t *testing.T) { Acceptance(t, types.NewAppThatAcceptsPointerTypes()) })
 	t.Run("with custom type", func(t *testing.T) { Acceptance(t, types.NewAppThatAcceptsCustomTypes()) })
+	t.Run("with generic number type", func(t *testing.T) { Acceptance(t, types.NewAppThatAcceptsGenericNumberType()) })
 }
 
 func Acceptance(t *testing.T, app http.HandlerFunc) {
