@@ -3,3 +3,6 @@ dev:
 
 release:
 	hugo
+
+install:
+	./scripts/install_dependencies.sh
