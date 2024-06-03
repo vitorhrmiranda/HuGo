@@ -6,3 +6,6 @@ release:
 
 install:
 	./scripts/install_dependencies.sh
+
+push:
+	./scripts/push_to_pages.sh
