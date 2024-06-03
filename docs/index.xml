@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vitor Miranda Blog</title>
+    <link>/</link>
+    <description>Recent content on Vitor Miranda Blog</description>
+    <generator>Hugo</generator>
+    <language>pt-br</language>
+    <lastBuildDate>Thu, 23 May 2024 22:00:00 -0300</lastBuildDate>
+    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Campos opcionais em API REST</title>
+      <link>/posts/nullable_types/</link>
+      <pubDate>Thu, 23 May 2024 22:00:00 -0300</pubDate>
+      <guid>/posts/nullable_types/</guid>
+      <description>Proposta Construir e consumir APIs REST são tarefas comuns no dia a dia de um desenvolvedor. Porém, nem sempre os dados retornados por essas APIs são completos, podendo conter valores nulos. Em GO, os tipos básicos não aceitam valores nulos, o que pode ser um desafio ao lidar com APIs REST.&#xA;A seguir descrevo em detalhes a problemática e duas abordagens para solucionar.&#xA;Requisitos Vamos ao cenario:&#xA;Vamos simular uma API que: 1.</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+ 
+
+
+      <title>Campos opcionais em API REST - </title>
+
+  <meta name="description" content="Proposta Construir e consumir APIs REST são tarefas comuns no dia a dia de um desenvolvedor. Porém, nem sempre os dados retornados por essas APIs são completos, podendo conter valores nulos. Em GO, os tipos básicos não aceitam valores nulos, o que pode ser um desafio ao lidar com APIs REST.
+A seguir descrevo em detalhes a problemática e duas abordagens para solucionar.
+Requisitos Vamos ao cenario:
+Vamos simular uma API que: 1."><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Vitor Miranda Blog",
+    
+    "url": "\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/posts\/nullable_types\/",
+          "name": "Campos opcionais em API rest"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : ""
+  },
+  "headline": "Campos opcionais em API REST",
+  "description" : "Proposta Construir e consumir APIs REST são tarefas comuns no dia a dia de um desenvolvedor. Porém, nem sempre os dados retornados por essas APIs são completos, podendo conter valores nulos. Em GO, os tipos básicos não aceitam valores nulos, o que pode ser um desafio ao lidar com APIs REST.\nA seguir descrevo em detalhes a problemática e duas abordagens para solucionar.\nRequisitos Vamos ao cenario:\nVamos simular uma API que: 1.",
+  "inLanguage" : "en",
+  "wordCount":  686 ,
+  "datePublished" : "2024-05-23T22:00:00-03:00",
+  "dateModified" : "2024-05-23T22:00:00-03:00",
+  "image" : "\/",
+  "keywords" : [ "" ],
+  "mainEntityOfPage" : "\/posts\/nullable_types\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "\/",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+
+<meta property="og:title" content="Campos opcionais em API REST" />
+<meta property="og:description" content="Proposta Construir e consumir APIs REST são tarefas comuns no dia a dia de um desenvolvedor. Porém, nem sempre os dados retornados por essas APIs são completos, podendo conter valores nulos. Em GO, os tipos básicos não aceitam valores nulos, o que pode ser um desafio ao lidar com APIs REST.
+A seguir descrevo em detalhes a problemática e duas abordagens para solucionar.
+Requisitos Vamos ao cenario:
+Vamos simular uma API que: 1.">
+<meta property="og:url" content="/posts/nullable_types/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Vitor Miranda Blog" />
+
+  <meta name="twitter:title" content="Campos opcionais em API REST" />
+  <meta name="twitter:description" content="Proposta Construir e consumir APIs REST são tarefas comuns no dia a dia de um desenvolvedor. Porém, nem sempre os dados retornados por essas APIs são completos, podendo conter valores nulos. Em GO, os …">
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="generator" content="Hugo 0.126.3">
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Vitor Miranda Blog"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css" integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="/css/syntax.css" /><link rel="stylesheet" href="/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+  
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Vitor Miranda Blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="posts-heading">
+              
+                <h1>Campos opcionais em API REST</h1>
+              
+              
+                <hr class="small">
+              
+              
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h2 id="proposta">Proposta</h2>
+<p>Construir e consumir <a href="https://www.redhat.com/en/topics/api/what-is-a-rest-api">APIs REST</a> são tarefas comuns no dia a dia de um desenvolvedor. Porém, nem sempre os dados retornados por essas APIs são completos, podendo conter valores nulos. Em GO, os tipos básicos não aceitam valores nulos, o que pode ser um desafio ao lidar com APIs REST.</p>
+<p>A seguir descrevo em detalhes a problemática e duas abordagens para solucionar.</p>
+<h2 id="requisitos">Requisitos</h2>
+<p>Vamos ao cenario:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">Vamos simular uma API que</span>:
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">. recebe um requisição POST;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">não é necessário validar o verbo HTTP;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">2</span><span style="color:#ae81ff">. obtem o parametro &#39;count&#39; do tipo inteiro do payload;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">2.1</span><span style="color:#ae81ff">. caso o payload esteja mal formatado, retorna um erro 400;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ae81ff">2.2</span><span style="color:#ae81ff">. caso o cliente não informe o campo &#39;count&#39;, retorna um erro 422;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">3</span><span style="color:#ae81ff">. retorna como resposta o valor &#39;count&#39; acrescido de 1.</span>
+</span></span></code></pre></div><h3 id="testes-de-aceitação">Testes de aceitação</h3>
+<p>Os <a href="https://github.com/vitorhrmiranda/HuGo/blob/hugo-pages/source/nullable_types/acceptance/types_test.go#22">cenarios de teste</a> descrevem o comportamento esperado da API, conforme os requisitos acima.</p>
+<h2 id="1-back-to-basics">1. Back to Basics</h2>
+<p>A <a href="https://github.com/vitorhrmiranda/HuGo/blob/hugo-pages/source/nullable_types/types/basic.go#12">primeira abordagem</a> é a mais simples e direta. Utilizamos uma <a href="https://github.com/vitorhrmiranda/HuGo/blob/hugo-pages/source/nullable_types/types/basic.go#8">struct</a> contendo o atributo <code>Count</code> do tipo <code>int</code> para parsear o payload da requisição. Caso o parse falhe, retornamos um erro 400. Na sequencia incrementamos o valor de <code>Count</code> e retornamos o resultado.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">PayloadWithBasicTypes</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Count</span> <span style="color:#66d9ef">int</span> <span style="color:#e6db74">`json:&#34;count&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="11-testes">1.1. Testes</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ go test -run ^TestAcceptance$/^with_basic_type$ nullable/acceptance
+</span></span></code></pre></div><p>Dois testes falharam. Ambos esperavam <code>422</code> e obtiveram <code>200</code>, o primeiro não informando o campo <code>count</code>e o segundo informando como <code>null</code>. Ao mapearmos o conteudo do payload para a struct, os campos não informados são inicializados com <a href="https://go.dev/tour/basics/12">zero values</a>, logo incrementamos o valor <code>0</code> em 1 e retornamos 200, não atendendo aos cenarios em que o campo <code>count</code> não é informado.</p>
+<p>Mas como identificar se o cliente deixou de informar o campo ou se simplesmente informou com valor <code>0</code>?</p>
+<h2 id="2-pointing-to-the-solution">2. Pointing to the solution</h2>
+<p>Precisamos então de um tipo que mantenha a informação (int) do campo <code>count</code> e um indicativo de que o campo foi (ou não) preenchido. A <a href="https://github.com/vitorhrmiranda/HuGo/blob/hugo-pages/source/nullable_types/types/pointer.go#12">segunda abordagem</a> utiliza um ponteiro para <code>int</code> para atender a essa necessidade.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">PayloadWithPointerTypes</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Count</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">int</span> <span style="color:#e6db74">`json:&#34;count&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Com esse novo payload, muito pouco se altera na implementação, adicionamos apenas um <a href="https://github.com/vitorhrmiranda/HuGo/blob/hugo-pages/source/nullable_types/types/pointer.go#19">if</a> para verificar se o campo <code>count</code> foi preenchido e retornando erro 422 caso contrário.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">payload</span>.<span style="color:#a6e22e">Count</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Error</span>(<span style="color:#a6e22e">writer</span>, <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusUnprocessableEntity</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><h3 id="21-testes">2.1. Testes</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ go test -run ^TestAcceptance$/^with_pointer_type$ nullable/acceptance
+</span></span></code></pre></div><p>Nossos testes de aceitação agora passam. ✅ 🎉 ✨</p>
+<p>Agora podemos ir tomar aquele café&hellip;</p>
+<p><img src="./ou_sera_que_nao.jpg" alt="alt"></p>
+<h3 id="3-customizando-seu-ponteiro">3. Customizando seu ponteiro</h3>
+<p>A abordagem descrita anteriormente e suficiente para a maioria dos casos, mas gostaria de listar algums pontos de atenção:</p>
+<ul>
+<li>Adicionar a possibilidade de nulo ao campo &lsquo;count&rsquo; obriga o desenvolvedor a verificar se o campo e nulo a cada leitura e potencialmente antes de escrever também.</li>
+<li>Conforme a estrutura Payload cresce, o custo de verificar todos os campos nullables torna-se dificil de gerencial e propenso a erros.</li>
+<li>A estrutura Payload pode ser usada em varios lugares, o que significa que a verificacao de nulos deve ser feita em varios lugares.</li>
+</ul>
+<p>Então podemos ir além, com uma abordagem mais &ldquo;limpa&rdquo; e criar um tipo personalizado que encapsula o <code>*int</code> e fornece metodos para manipula-lo.
+Nossa <a href="https://github.com/vitorhrmiranda/HuGo/blob/hugo-pages/source/nullable_types/types/custom.go#40">terceira abordagem</a> utiliza um tipo <code>NullableInt</code> como substituto para <code>*int</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">NullableInt</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">value</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">PayloadWithCustomTypes</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Count</span> <span style="color:#a6e22e">NullableInt</span> <span style="color:#e6db74">`json:&#34;count&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Mantemos o valor <code>value</code> do ponteiro privado e fornecemos metodos para manipula-lo.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Obtem o valor, se nulo retorna 0, evitando nil pointer dereference
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">t</span> <span style="color:#a6e22e">NullableInt</span>) <span style="color:#a6e22e">Value</span>() <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Permite atualizar o valor. Não foi adicionado a verficação de nulo, mas em situações reais seria necessario.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">t</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">NullableInt</span>) <span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">v</span> <span style="color:#66d9ef">int</span>)
+</span></span></code></pre></div><p>Temos ainda a implementação dos metodos das interfacec <a href="https://pkg.go.dev/encoding/json#Unmarshaler">json.Unmarshaler</a> e <a href="https://pkg.go.dev/encoding/json#Marshaler">json.Marshaler</a> para permitir a <a href="https://github.com/vitorhrmiranda/HuGo/blob/hugo-pages/source/nullable_types/types/custom.go#31">serialização</a> e <a href="https://github.com/vitorhrmiranda/HuGo/blob/hugo-pages/source/nullable_types/types/custom.go#27">deserialização</a> do tipo <code>NullableInt</code> como um <code>*int</code>.</p>
+<h3 id="31-testes">3.1. Testes</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ go test -run ^TestAcceptance$/^with_custom_type$ nullable/acceptance
+</span></span></code></pre></div><p>Os testes seguem passando, mas agora temos uma estrutura mais robusta e facil de manter. ✅ 🎉 ✨
+Vale ressaltar que existem pacotes que implementam tipo com comportamentos similares, como <a href="https://pkg.go.dev/database/sql#NullInt64">sql.NullInt64</a> utilizado para representar valores nulos em banco de dados e <a href="https://pkg.go.dev/encoding/json#Number">json.Number</a> que, assim como implementamos, representa valores numericos em JSON, permitindo valores nulos e com diversas operações de manipulação.</p>
+
+
+        
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+      
+<footer>
+  <div class="container">
+    
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2024
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Vitor Miranda Blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="https://gohugo.io">Hugo v0.126.3</a> powered &nbsp;&bull;&nbsp; Theme <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a> adapted from <a href="https://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js" integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.slim.min.js" integrity="sha384-w5y/xIeYixWvfM+A1cEbmHPURnvyqmVg5eVENruEdDjcyRLUSNej7512JQGspFUr" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+<script src="/js/main.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+    
+  </body>
+</html>
+
