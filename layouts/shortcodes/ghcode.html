@@ -1,0 +1,29 @@
+{{ $file := .Get 0 }}
+{{ $firstLine := .Get 1 }}
+{{ $lastLine := .Get 2 }}
+
+{{ with resources.GetRemote $file }}
+  {{ with .Err }}
+    {{ errorf "%s" . }}
+  {{ else }}
+    {{ $lines := strings.Split .Content "\n" }}
+
+    {{ if not $firstLine }}
+      {{ $firstLine = 1 }}
+    {{ end }}
+    {{ if not $lastLine }}
+      {{ $lastLine = len $lines }}
+    {{ end }}
+
+    {{ $lang := path.Ext $file | strings.TrimPrefix "." }}
+    {{ $content := ""}}
+    {{ range $i, $line := $lines }}
+      {{if and (ge $i (sub $firstLine 1)) (lt $i $lastLine) }}
+        {{ $content = printf "%s\n%s" $content $line }}
+      {{ end }}
+    {{ end }}
+    {{ highlight ($content | strings.TrimPrefix "\n") $lang "linenos=table,linenostart=1" }}
+  {{ end }}
+{{ else }}
+  {{ errorf "Unable to get remote resource." }}
+{{ end }}
