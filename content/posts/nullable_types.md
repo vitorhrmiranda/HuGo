@@ -21,7 +21,8 @@ Vamos simular uma API que:
 ```
 
 ### Testes de aceitação
-Os [cenarios de teste](https://github.com/vitorhrmiranda/HuGo/blob/hugo-pages/source/nullable_types/acceptance/types_test.go#22) descrevem o comportamento esperado da API, conforme os requisitos acima.
+Os [cenarios de teste](https://github.com/vitorhrmiranda/HuGo/blob/main/source/nullable_types/acceptance/types_test.go#22) descrevem o comportamento esperado da API, conforme os requisitos acima.
+{{< ghcode "https://raw.githubusercontent.com/vitorhrmiranda/HuGo/main/source/nullable_types/acceptance/types_test.go#L16-L21" >}}
 
 ## 1. Back to Basics
 A [primeira abordagem](https://github.com/vitorhrmiranda/HuGo/blob/hugo-pages/source/nullable_types/types/basic.go#12) é a mais simples e direta. Utilizamos uma [struct](https://github.com/vitorhrmiranda/HuGo/blob/hugo-pages/source/nullable_types/types/basic.go#8) contendo o atributo `Count` do tipo `int` para parsear o payload da requisição. Caso o parse falhe, retornamos um erro 400. Na sequencia incrementamos o valor de `Count` e retornamos o resultado.
